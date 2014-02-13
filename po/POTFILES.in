@@ -1,0 +1,5 @@
+data/org.gnome.gproxies.desktop.in
+data/org.gnome.gproxies.gschema.xml.in.in
+src/application.vala
+src/window.vala
+[type: gettext/glade]data/ui/window.ui
