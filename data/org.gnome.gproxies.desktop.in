@@ -1,14 +1,12 @@
 [Desktop Entry]
-_Name=Clocks
-_GenericName=Clocks
-_X-GNOME-FullName=GNOME Clocks
-_Comment=Clocks for world times, plus alarms, stopwatch and a timer
-_Keywords=time;timer;alarm;world clock;stopwatch;time zone;
-Exec=gnome-clocks
-Icon=gnome-clocks
+_Name=GProxies
+_GenericName=GProxies
+_Comment=Utility to help you keep your proxy configurations
+_Keywords=network;proxy
+Exec=gproxies
 Terminal=false
 Type=Application
-Categories=GNOME;GTK;Utility;Clock;
+Categories=GNOME;GTK;Utility;Network;
 StartupNotify=true
 DBusActivatable=true
 X-GNOME-UsesNotifications=true
