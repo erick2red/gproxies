@@ -95,6 +95,7 @@ MAINTAINERCLEANFILES = \
 	missing \
 	$(gsettings_SCHEMAS:.xml=.valid) \
 	$(VALA_SOURCES:.vala=.c) \
-	*.stamp
+	*.stamp \
+	compile
 
 -include $(top_srcdir)/git.mk
