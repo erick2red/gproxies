@@ -38,10 +38,15 @@ namespace GProxies {
 
       add_action_entries (action_entries, this);
 
-      proxies_list.add (new Row());
-      proxies_list.add (new Row());
-      proxies_list.add (new Row());
-      proxies_list.add (new Label("Sample text 111"));
+      var r = new Row ();
+      r.row_name = "192.168.253.1:3128";
+      proxies_list.add (r);
+      r = new Row ();
+      r.row_name = "smeagol.datys.cu:8080";
+      proxies_list.add (r);
+      r = new Row ();
+      r.row_name = "209.56.182.2:80";
+      proxies_list.add (r);
 
       show_all ();
     }

@@ -27,11 +27,33 @@ namespace GProxies {
     [GtkChild]
     private Revealer details_revealer;
 
+    [GtkChild]
+    private Button save_button;
+
+    [GtkChild]
+    private Label label_name;
+
+    public string row_name {
+      get {
+        return label_name.get_text ();
+      }
+      set {
+        label_name.set_text (value);
+      }
+    }
+
     public Row () {
       details_button.bind_property ("active",
-				    details_revealer, "reveal-child",
-				    BindingFlags.SYNC_CREATE |
-				    BindingFlags.BIDIRECTIONAL);
+                                    details_revealer, "reveal-child",
+                                    BindingFlags.SYNC_CREATE |
+                                    BindingFlags.BIDIRECTIONAL);
+
+    }
+
+    [GtkCallback]
+    public void save_row_details () {
+      /* FIXME: fill in with proper row saving functionality */
+      details_revealer.set_reveal_child (false);
     }
   }
 
