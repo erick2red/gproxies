@@ -38,8 +38,9 @@ namespace GProxies {
 
       add_action_entries (action_entries, this);
 
-      proxies_list.add (new Label("Sample text 1"));
-      proxies_list.add (new Label("Sample text 11"));
+      proxies_list.add (new Row());
+      proxies_list.add (new Row());
+      proxies_list.add (new Row());
       proxies_list.add (new Label("Sample text 111"));
 
       show_all ();

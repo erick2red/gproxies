@@ -2,6 +2,7 @@
 <gresources>
   <gresource prefix="/org/gnome/gproxies">
     <file preprocess="xml-stripblanks">ui/window.ui</file>
+    <file preprocess="xml-stripblanks">ui/row.ui</file>
     <file preprocess="xml-stripblanks">ui/menu.ui</file>
   </gresource>
 </gresources>

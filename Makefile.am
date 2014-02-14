@@ -49,6 +49,7 @@ src/resources.c: $(top_srcdir)/data/gproxies.gresource.xml $(resource_files)
 VALA_SOURCES = \
 	src/application.vala \
 	src/window.vala \
+	src/row.vala \
 	src/utils.vala \
 	src/main.vala
 
