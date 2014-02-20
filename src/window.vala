@@ -87,6 +87,15 @@ namespace GProxies {
 
       proxies_list.add (r);
     }
+
+    [GtkCallback]
+    private void row_activated (ListBoxRow source_row) {
+      (source_row as Row).set_active (true);
+      active_row = source_row as Row;
+
+      /* FIXME: fill in with proper execute-plugins code */
+      stdout.printf ("Activated row: %s\n", (source_row as Row).row_name);
+    }
   }
 
 } // namespace GProxies
