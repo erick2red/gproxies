@@ -33,6 +33,9 @@ namespace GProxies {
     [GtkChild]
     private Label label_name;
 
+    [GtkChild]
+    public RadioButton selection_radio;
+
     public string row_name {
       get {
         return label_name.get_text ();
@@ -54,6 +57,14 @@ namespace GProxies {
     public void save_row_details () {
       /* FIXME: fill in with proper row saving functionality */
       details_revealer.set_reveal_child (false);
+    }
+
+    public void set_active (bool active) {
+      selection_radio.set_active (active);
+    }
+
+    public void show_details (bool shown) {
+      details_revealer.set_reveal_child (shown);
     }
   }
 

@@ -22,8 +22,10 @@ using Gtk;
 namespace GProxies {
   [GtkTemplate (ui = "/org/gnome/gproxies/ui/window.ui")]
   public class Window : Gtk.ApplicationWindow {
+
     private const GLib.ActionEntry[] action_entries = {
       { "about", on_about_activate },
+      {  "add" , on_add_activate },
     };
 
     [GtkChild]
@@ -33,20 +35,15 @@ namespace GProxies {
     [GtkChild]
     private ListBox proxies_list;
 
+    /* active configuration */
+    private weak Row active_row;
+
     public Window (Application app) {
       Object (application: app);
 
-      add_action_entries (action_entries, this);
+      active_row = null;
 
-      var r = new Row ();
-      r.row_name = "192.168.253.1:3128";
-      proxies_list.add (r);
-      r = new Row ();
-      r.row_name = "smeagol.datys.cu:8080";
-      proxies_list.add (r);
-      r = new Row ();
-      r.row_name = "209.56.182.2:80";
-      proxies_list.add (r);
+      add_action_entries (action_entries, this);
 
       show_all ();
     }
@@ -68,6 +65,27 @@ namespace GProxies {
                              "license-type", Gtk.License.GPL_2_0,
                              "wrap-license", false,
                              null);
+    }
+
+    /* FIXME: demo code */
+    static int counter = 0;
+    private void on_add_activate () {
+      stdout.printf ("Hii you just pressed add\n");
+
+      /* FIXME: demo code */
+      counter += 1;
+
+      var r = new Row ();
+      r.row_name = "192.168.25%d.%d:3128".printf (counter, ++counter);
+      r.show_details (true);
+      r.show ();
+      if (active_row != null) {
+	r.selection_radio.join_group (active_row.selection_radio);
+      }
+      r.set_active (true);
+      active_row = r;
+
+      proxies_list.add (r);
     }
   }
 

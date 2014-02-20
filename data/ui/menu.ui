@@ -4,6 +4,12 @@
   <menu id="appmenu">
     <section>
       <item>
+        <attribute name="label" translatable="yes">_Add</attribute>
+        <attribute name="action">win.add</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
         <attribute name="label" translatable="yes">_About</attribute>
         <attribute name="action">win.about</attribute>
       </item>
