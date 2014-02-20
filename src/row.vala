@@ -29,6 +29,8 @@ namespace GProxies {
 
     [GtkChild]
     private Button save_button;
+    [GtkChild]
+    private Button delete_button;
 
     [GtkChild]
     private Label label_name;
@@ -51,12 +53,29 @@ namespace GProxies {
                                     BindingFlags.SYNC_CREATE |
                                     BindingFlags.BIDIRECTIONAL);
 
+      details_button.bind_property ("active",
+                                    label_name, "sensitive",
+                                    BindingFlags.SYNC_CREATE |
+                                    BindingFlags.INVERT_BOOLEAN |
+                                    BindingFlags.BIDIRECTIONAL);
+
+      selection_radio.bind_property ("active",
+                                     delete_button, "sensitive",
+                                     BindingFlags.SYNC_CREATE |
+                                     BindingFlags.INVERT_BOOLEAN |
+                                     BindingFlags.BIDIRECTIONAL);
+
     }
 
     [GtkCallback]
     public void save_row_details () {
       /* FIXME: fill in with proper row saving functionality */
       details_revealer.set_reveal_child (false);
+    }
+
+    [GtkCallback]
+    public void destroy_callback (Button button) {
+      destroy ();
     }
 
     public void set_active (bool active) {
