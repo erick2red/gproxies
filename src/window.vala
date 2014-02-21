@@ -81,6 +81,11 @@ namespace GProxies {
       r.show ();
       if (active_row != null) {
 	r.selection_radio.join_group (active_row.selection_radio);
+
+	/* adding separator */
+	var sep = new Separator (Orientation.HORIZONTAL);
+	sep.show ();
+	proxies_list.add (sep);
       }
       r.set_active (true);
       active_row = r;
@@ -90,6 +95,9 @@ namespace GProxies {
 
     [GtkCallback]
     private void row_activated (ListBoxRow source_row) {
+      if (source_row.get_index () % 2 == 1)
+	return;
+
       (source_row as Row).set_active (true);
       active_row = source_row as Row;
 
