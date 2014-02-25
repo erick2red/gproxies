@@ -91,6 +91,9 @@
                     <property name="receives_default">True</property>
                     <property name="use_underline">True</property>
                     <signal name="clicked" handler="save_row_details" swapped="no"/>
+                    <style>
+                      <class name="suggested-action"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
