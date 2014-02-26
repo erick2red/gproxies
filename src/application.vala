@@ -48,7 +48,7 @@ namespace GProxies {
       base.startup ();
 
       var builder = Utils.load_ui ("menu.ui");
-      var app_menu = builder.get_object ("appmenu") as MenuModel;
+      var app_menu = builder.get_object ("app-menu") as MenuModel;
       set_app_menu (app_menu);
     }
 
