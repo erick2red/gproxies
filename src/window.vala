@@ -25,13 +25,16 @@ namespace GProxies {
 
     private const GLib.ActionEntry[] action_entries = {
       { "about", on_about_activate },
-      {  "add" , on_add_activate },
+      { "add"  , on_add_activate },
+      { "use-default" , null, null, "true", on_use_default_toggle },
     };
 
     [GtkChild]
     private HeaderBar header_bar;
     [GtkChild]
     private Button add_button;
+    [GtkChild]
+    private MenuButton settings_button;
     [GtkChild]
     private ListBox proxies_list;
 
@@ -44,6 +47,9 @@ namespace GProxies {
       active_row = null;
 
       add_action_entries (action_entries, this);
+
+      var builder = Utils.load_ui ("menu.ui");
+      settings_button.menu_model = builder.get_object ("settings-menu") as MenuModel;
 
       show_all ();
     }
@@ -91,6 +97,14 @@ namespace GProxies {
       active_row = r;
 
       proxies_list.add (r);
+    }
+
+    private void on_use_default_toggle (GLib.SimpleAction action,
+					GLib.Variant      value) {
+      /* FIXME: debug code, remove me! */
+      print ("[state]: clicked use-default-plugin action\n");
+      print ("[state]: action state: %s\n", action.state.print  (true));
+      action.set_state (value);
     }
 
     [GtkCallback]

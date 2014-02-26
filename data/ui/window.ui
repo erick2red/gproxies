@@ -38,6 +38,27 @@
             <property name="pack-type">start</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkMenuButton" id="settings_button">
+            <property name="visible">True</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+            <property name="action_name">win.settings</property>
+            <style>
+              <class name="image-button"/>
+            </style>
+            <child>
+              <object class="GtkImage" id="settings-icon">
+                <property name="visible">True</property>
+                <property name="icon-name">emblem-system-symbolic</property>
+                <property name="icon-size">1</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="pack-type">end</property>
+          </packing>
+        </child>
       </object>
     </child>
     <child>

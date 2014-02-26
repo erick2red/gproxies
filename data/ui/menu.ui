@@ -20,4 +20,12 @@
       </item>
     </section>
   </menu>
+  <menu id="settings-menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Use default plugin</attribute>
+        <attribute name="action">win.use-default</attribute>
+      </item>
+    </section>
+  </menu>
 </interface>
