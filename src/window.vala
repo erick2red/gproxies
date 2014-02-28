@@ -53,6 +53,16 @@ namespace GProxies {
       settings_button.menu_model = builder.get_object ("settings-menu") as MenuModel;
 
       show_all ();
+
+      /* setup data & plugins folders */
+      if (!settings.get_boolean ("did-setup")) {
+	if (Utils.setup_files_folders () == false) {
+	  printerr ("GProxies: Unable to create setup folders\n");
+	  app.quit ();
+	} else {
+	  settings.set_boolean ("did-setup", true);
+	}
+      }
     }
 
     private void on_about_activate () {

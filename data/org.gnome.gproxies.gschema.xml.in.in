@@ -1,5 +1,10 @@
 <schemalist gettext-domain="@GETTEXT_PACKAGE@">
   <schema id="org.gnome.gproxies" path="/org/gnome/gproxies/">
+    <key name="did-setup" type="b">
+      <default>false</default>
+      <_summary>Run setup routines</_summary>
+      <_description>Create folders need for the program to run</_description>
+    </key>
     <key name="active-proxy" type="s">
       <default>""</default>
       <_summary>Active proxy configuration</_summary>

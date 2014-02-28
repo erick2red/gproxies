@@ -30,5 +30,27 @@ namespace GProxies {
       return builder;
     }
 
+    public bool setup_files_folders () {
+      /* config_dir/gproxies */
+      var dirpath = Path.build_filename (Environment.get_user_config_dir (),
+	                                 "gproxies");
+      if (DirUtils.create (dirpath, 0755) != 0) {
+	return false;
+      }
+
+      /* config_dir/gproxies/proxies.variant */
+      var filename = Path.build_filename (dirpath, "proxies.variant");
+      var f = FileStream.open (filename, "w");
+
+      /* data_dir/gproxies */
+      dirpath = Path.build_filename (Environment.get_user_data_dir (),
+	                             "gproxies");
+      if (DirUtils.create (dirpath, 0755) != 0) {
+	return false;
+      }
+
+      return true;
+    }
+
   } // namespace Utils
 } // namespace GProxies
