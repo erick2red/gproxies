@@ -28,6 +28,7 @@ namespace GProxies {
     };
 
     private GLib.Settings settings;
+    private static string proxies_filename;
 
     /* active configuration */
     private weak Row active_row;
@@ -62,6 +63,21 @@ namespace GProxies {
 	  settings.set_boolean ("did-setup", true);
 	}
       }
+
+      /* open file, process it */
+      proxies_filename = Path.build_filename (Environment.get_user_config_dir (),
+					      "gproxies",
+					      "proxies.variant");
+      string contents;
+      try {
+	FileUtils.get_contents (proxies_filename, out contents);
+      } catch (FileError e) {
+	error ("Error: %s\nProxies data could not be loaded\n", e.message);
+      }
+      if (contents != "") {
+	var data = Variant.parse (new VariantType ("a(ssuss)"), contents);
+	print ("d: %s\n", data.print (true));
+      }
     }
 
     private void on_about_activate () {
@@ -94,6 +110,32 @@ namespace GProxies {
       active_row = r;
 
       proxies_list.add (r);
+      r.modified.connect (save_proxies);
+    }
+
+    private void save_proxies () {
+      var type = new VariantType ("a(ssuss)");
+      var builder = new VariantBuilder (type);
+
+      print ("Saving children\n");
+      foreach (var child in proxies_list.get_children ()) {
+	if (!(child is Row))
+	  continue;
+
+	Row row = child as Row;
+	print ("row_name of childrens is: %s\n", row.uid);
+
+	builder.add ("(ssuss)",
+		     row.uid,
+		     row.host_entry.text, row.port_entry.get_value_as_int (),
+		     row.user_entry.text, row.password_entry.text);
+      }
+
+      try {
+	FileUtils.set_contents (proxies_filename, builder.end ().print (true));
+      } catch (FileError e) {
+	error ("Error: %s\nProxies could not be saved\n", e.message);
+      }
     }
 
     [GtkCallback]
