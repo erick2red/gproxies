@@ -22,21 +22,20 @@ using Gtk;
 namespace GProxies {
   [GtkTemplate (ui = "/org/gnome/gproxies/ui/window.ui")]
   public class Window : Gtk.ApplicationWindow {
-
     private const GLib.ActionEntry[] action_entries = {
       { "about", on_about_activate },
       { "add"  , on_add_activate },
     };
 
-    [GtkChild]
-    private MenuButton settings_button;
-    [GtkChild]
-    private ListBox proxies_list;
-
     private GLib.Settings settings;
 
     /* active configuration */
     private weak Row active_row;
+
+    [GtkChild]
+    private MenuButton settings_button;
+    [GtkChild]
+    private ListBox proxies_list;
 
     public Window (Application app) {
       Object (application: app);
