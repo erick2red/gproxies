@@ -38,12 +38,24 @@ namespace GProxies {
     [GtkChild]
     public RadioButton selection_radio;
 
-    public string row_name {
+    /* data entries */
+    [GtkChild]
+    public Entry host_entry;
+    [GtkChild]
+    public SpinButton port_entry;
+    [GtkChild]
+    public Entry user_entry;
+    [GtkChild]
+    public Entry password_entry;
+
+    public string uid { get; private set; }
+
+    public bool details_shown {
       get {
-        return label_name.get_text ();
+	return details_revealer.reveal_child;
       }
       set {
-        label_name.set_text (value);
+	details_revealer.set_reveal_child (value);
       }
     }
 
@@ -65,12 +77,31 @@ namespace GProxies {
                                      BindingFlags.INVERT_BOOLEAN |
                                      BindingFlags.BIDIRECTIONAL);
 
+      port_entry.set_value (3128);
+      host_entry.changed.connect (update_save);
+    }
+
+    private void update_save () {
+      save_button.sensitive =  (host_entry.text != "" &&
+				port_entry.value != 0.0);
     }
 
     [GtkCallback]
     public void save_row_details () {
-      /* FIXME: fill in with proper row saving functionality */
       details_revealer.set_reveal_child (false);
+      label_name.set_text ("%s:%d".printf (host_entry.text,
+					   port_entry.get_value_as_int ()));
+      /* update uid */
+      var data = "%s $ %s $ %d $ %s".printf (host_entry.text,
+					     user_entry.text,
+					     port_entry.get_value_as_int (),
+					     password_entry.text);
+      uid = Checksum.compute_for_string (ChecksumType.MD5, data);
+
+      modified ();
+
+      if (selection_radio.active)
+	activate ();
     }
 
     [GtkCallback]
@@ -82,9 +113,7 @@ namespace GProxies {
       selection_radio.set_active (active);
     }
 
-    public void show_details (bool shown) {
-      details_revealer.set_reveal_child (shown);
-    }
+    public signal void modified ();
   }
 
 } // namespace GProxies
