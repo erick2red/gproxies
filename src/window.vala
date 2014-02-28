@@ -98,14 +98,15 @@ namespace GProxies {
 
     [GtkCallback]
     private void row_activated (ListBoxRow source_row) {
-      if (source_row.get_index () % 2 == 1)
+      if (!(source_row is Row))
 	return;
 
       (source_row as Row).set_active (true);
       active_row = source_row as Row;
+      settings.set_string ("active-proxy", active_row.uid);
 
       /* FIXME: fill in with proper execute-plugins code */
-      stdout.printf ("Activated row: %s\n", (source_row as Row).row_name);
+      print ("Called activated row: %s\n", active_row.uid);
     }
   }
 
