@@ -1,11 +1,14 @@
 <schemalist gettext-domain="@GETTEXT_PACKAGE@">
   <schema id="org.gnome.gproxies" path="/org/gnome/gproxies/">
-    <key name="active-proxy" type="u">
-      <default>300</default>
-      <_summary>Active</_summary>
-      <_description>
-        Last proxy configuration used.
-      </_description>
+    <key name="active-proxy" type="s">
+      <default>""</default>
+      <_summary>Active proxy configuration</_summary>
+      <_description>UID of the last active proxy configuration</_description>
+    </key>
+    <key name="use-default" type="b">
+      <default>true</default>
+      <_summary>Use default plugin</_summary>
+      <_description>Use default plugin setting proxy configuration for GNOME desktop</_description>
     </key>
   </schema>
 </schemalist>
