@@ -39,8 +39,8 @@ PKG_PROG_PKG_CONFIG([0.22])
 
 PKG_CHECK_MODULES(GPROXIES, [
     gio-2.0 >= 2.30.0
-    glib-2.0 >= 2.39
-    gtk+-3.0 >= 3.9.11
+    glib-2.0 >= 2.39.91
+    gtk+-3.0 >= 3.11.8
 ])
 
 AC_CONFIG_FILES([
