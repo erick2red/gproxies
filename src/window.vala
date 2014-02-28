@@ -83,25 +83,12 @@ namespace GProxies {
                              null);
     }
 
-    /* FIXME: demo code */
-    static int counter = 0;
     private void on_add_activate () {
-      stdout.printf ("Hii you just pressed add\n");
-
-      /* FIXME: demo code */
-      counter += 1;
-
       var r = new Row ();
-      r.row_name = "192.168.25%d.%d:3128".printf (counter, ++counter);
-      r.show_details (true);
+      r.details_shown = true;
       r.show ();
       if (active_row != null) {
 	r.selection_radio.join_group (active_row.selection_radio);
-
-	/* adding separator */
-	var sep = new Separator (Orientation.HORIZONTAL);
-	sep.show ();
-	proxies_list.add (sep);
       }
       r.set_active (true);
       active_row = r;
