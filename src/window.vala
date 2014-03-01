@@ -74,9 +74,13 @@ namespace GProxies {
       } catch (FileError e) {
 	error ("Error: %s\nProxies data could not be loaded\n", e.message);
       }
-      if (contents != "") {
-	var data = Variant.parse (new VariantType ("a(ssuss)"), contents);
-	print ("d: %s\n", data.print (true));
+      try {
+	if (contents != "") {
+	  var data = Variant.parse (new VariantType ("a(ssuss)"), contents);
+	  print ("d: %s\n", data.print (true));
+	}
+      } catch (VariantParseError e) {
+	error ("Error: %s\nProxies data could not be loaded\n", e.message);
       }
     }
 
