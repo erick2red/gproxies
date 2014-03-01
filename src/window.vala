@@ -72,15 +72,13 @@ namespace GProxies {
       try {
 	FileUtils.get_contents (proxies_filename, out contents);
       } catch (FileError e) {
-	error ("Error: %s\nProxies data could not be loaded\n", e.message);
+	printerr ("Error %s\nProxies data could not be loaded\n", e.message);
       }
       try {
-	if (contents != "") {
-	  var data = Variant.parse (new VariantType ("a(ssuss)"), contents);
-	  print ("d: %s\n", data.print (true));
-	}
+	var data = Variant.parse (new VariantType ("a(ssuss)"), contents);
+	print ("d: %s\n", data.print (true));
       } catch (VariantParseError e) {
-	error ("Error: %s\nProxies data could not be loaded\n", e.message);
+	printerr ("Error %s\nProxies data could not be loaded\n", e.message);
       }
     }
 
@@ -138,7 +136,7 @@ namespace GProxies {
       try {
 	FileUtils.set_contents (proxies_filename, builder.end ().print (true));
       } catch (FileError e) {
-	error ("Error: %s\nProxies could not be saved\n", e.message);
+	printerr ("Error %s\nProxies could not be saved\n", e.message);
       }
     }
 
