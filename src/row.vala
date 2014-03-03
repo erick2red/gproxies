@@ -98,7 +98,7 @@ namespace GProxies {
 					     password_entry.text);
       uid = Checksum.compute_for_string (ChecksumType.MD5, data);
 
-      modified ();
+      modified (false);
 
       if (selection_radio.active)
 	activate ();
@@ -106,6 +106,7 @@ namespace GProxies {
 
     [GtkCallback]
     public void destroy_callback (Button button) {
+      modified (true);
       destroy ();
     }
 
@@ -129,7 +130,7 @@ namespace GProxies {
       uid = Checksum.compute_for_string (ChecksumType.MD5, data);
     }
 
-    public signal void modified ();
+    public signal void modified (bool removed);
   }
 
 } // namespace GProxies

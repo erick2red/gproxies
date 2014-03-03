@@ -135,13 +135,16 @@ namespace GProxies {
       r.modified.connect (save_proxies);
     }
 
-    private void save_proxies () {
+    private void save_proxies (Row emitter, bool removed) {
       var type = new VariantType ("a(ssuss)");
       var builder = new VariantBuilder (type);
 
       print ("Saving children\n");
       foreach (var child in proxies_list.get_children ()) {
 	if (!(child is Row))
+	  continue;
+
+	if (removed && emitter == child)
 	  continue;
 
 	Row row = child as Row;
