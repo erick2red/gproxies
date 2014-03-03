@@ -1,5 +1,8 @@
 data/org.gnome.gproxies.desktop.in
 data/org.gnome.gproxies.gschema.xml.in.in
+data/appdata/org.gnome.gproxies.appdata.xml
 src/application.vala
 src/window.vala
 [type: gettext/glade]data/ui/window.ui
+[type: gettext/glade]data/ui/menu.ui
+[type: gettext/glade]data/ui/row.ui
