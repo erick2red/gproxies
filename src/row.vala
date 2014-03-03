@@ -113,6 +113,22 @@ namespace GProxies {
       selection_radio.set_active (active);
     }
 
+    public void set_proxy_data (string host, uint port, string user, string pass) {
+      host_entry.text = host;
+      port_entry.value = port;
+      user_entry.text = user;
+      password_entry.text = pass;
+
+      label_name.set_text ("%s:%d".printf (host_entry.text,
+					   port_entry.get_value_as_int ()));
+      /* update uid */
+      var data = "%s $ %s $ %d $ %s".printf (host_entry.text,
+					     user_entry.text,
+					     port_entry.get_value_as_int (),
+					     password_entry.text);
+      uid = Checksum.compute_for_string (ChecksumType.MD5, data);
+    }
+
     public signal void modified ();
   }
 

@@ -76,7 +76,27 @@ namespace GProxies {
       }
       try {
 	var data = Variant.parse (new VariantType ("a(ssuss)"), contents);
-	print ("d: %s\n", data.print (true));
+
+	foreach (var tv in data) {
+	  var r = new Row ();
+	  r.set_proxy_data (tv.get_child_value (1).get_string (),
+			    tv.get_child_value (2).get_uint32 (),
+			    tv.get_child_value (3).get_string (),
+			    tv.get_child_value (4).get_string ());
+	  r.show ();
+
+	  proxies_list.add (r);
+	  r.modified.connect (save_proxies);
+
+	  if (active_row != null)
+	    r.selection_radio.join_group (active_row.selection_radio);
+	  if (active_row == null)
+	    active_row = r;
+	  if (r.uid == settings.get_string ("active-proxy")) {
+	    r.set_active (true);
+	    active_row = r;
+	  }
+	}
       } catch (VariantParseError e) {
 	printerr ("Error %s\nProxies data could not be loaded\n", e.message);
       }
