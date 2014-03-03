@@ -52,10 +52,10 @@ namespace GProxies {
 
     public bool details_shown {
       get {
-	return details_revealer.reveal_child;
+        return details_revealer.reveal_child;
       }
       set {
-	details_revealer.set_reveal_child (value);
+        details_revealer.set_reveal_child (value);
       }
     }
 
@@ -110,8 +110,8 @@ namespace GProxies {
     }
 
     private void update_save () {
-      save_button.sensitive =  (host_entry.text != "" &&
-				port_entry.value != 0.0);
+      save_button.sensitive = (host_entry.text != "" &&
+                               port_entry.value != 0.0);
     }
 
     [GtkCallback]
@@ -122,7 +122,7 @@ namespace GProxies {
       modified (false);
 
       if (selection_radio.active)
-	activate ();
+        activate ();
     }
 
     [GtkCallback]

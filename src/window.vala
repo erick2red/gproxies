@@ -56,23 +56,23 @@ namespace GProxies {
 
       /* setup data & plugins folders */
       if (!settings.get_boolean ("did-setup")) {
-	if (Utils.setup_files_folders () == false) {
-	  printerr ("GProxies: Unable to create setup folders\n");
-	  app.quit ();
-	} else {
-	  settings.set_boolean ("did-setup", true);
-	}
+        if (Utils.setup_files_folders () == false) {
+          printerr ("GProxies: Unable to create setup folders\n");
+          app.quit ();
+        } else {
+          settings.set_boolean ("did-setup", true);
+        }
       }
 
       /* open file, process it */
       proxies_filename = Path.build_filename (Environment.get_user_config_dir (),
-					      "gproxies",
-					      "proxies.variant");
+                                              "gproxies",
+                                              "proxies.variant");
       string contents;
       try {
-	FileUtils.get_contents (proxies_filename, out contents);
+        FileUtils.get_contents (proxies_filename, out contents);
       } catch (FileError e) {
-	printerr ("Error %s\nProxies data could not be loaded\n", e.message);
+        printerr ("Error %s\nProxies data could not be loaded\n", e.message);
       }
       try {
         var data = Variant.parse (new VariantType ("a(ssuss)"), contents);
@@ -99,7 +99,7 @@ namespace GProxies {
           }
         }
       } catch (VariantParseError e) {
-	printerr ("Error %s\nProxies data could not be loaded\n", e.message);
+        printerr ("Error %s\nProxies data could not be loaded\n", e.message);
       }
     }
 
@@ -127,7 +127,7 @@ namespace GProxies {
       r.details_shown = true;
       r.show ();
       if (active_row != null) {
-	r.selection_radio.join_group (active_row.selection_radio);
+        r.selection_radio.join_group (active_row.selection_radio);
       }
       r.set_active (true);
       active_row = r;
@@ -142,32 +142,32 @@ namespace GProxies {
 
       print ("Saving children\n");
       foreach (var child in proxies_list.get_children ()) {
-	if (!(child is Row))
-	  continue;
+        if (!(child is Row))
+          continue;
 
-	if (removed && emitter == child)
-	  continue;
+        if (removed && emitter == child)
+          continue;
 
-	Row row = child as Row;
-	print ("row_name of childrens is: %s\n", row.uid);
+        Row row = child as Row;
+        print ("row_name of childrens is: %s\n", row.uid);
 
-	builder.add ("(ssuss)",
-		     row.uid,
-		     row.host_entry.text, row.port_entry.get_value_as_int (),
-		     row.user_entry.text, row.password_entry.text);
+        builder.add ("(ssuss)",
+                     row.uid,
+                     row.host_entry.text, row.port_entry.get_value_as_int (),
+                     row.user_entry.text, row.password_entry.text);
       }
 
       try {
-	FileUtils.set_contents (proxies_filename, builder.end ().print (true));
+        FileUtils.set_contents (proxies_filename, builder.end ().print (true));
       } catch (FileError e) {
-	printerr ("Error %s\nProxies could not be saved\n", e.message);
+        printerr ("Error %s\nProxies could not be saved\n", e.message);
       }
     }
 
     [GtkCallback]
     private void row_activated (ListBoxRow source_row) {
       if (!(source_row is Row))
-	return;
+        return;
 
       (source_row as Row).set_active (true);
       active_row = source_row as Row;
