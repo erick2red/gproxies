@@ -40,7 +40,13 @@ namespace GProxies {
 
       /* config_dir/gproxies/proxies.variant */
       var filename = Path.build_filename (dirpath, "proxies.variant");
-      var f = FileStream.open (filename, "w");
+      var file = File.new_for_path (filename);
+      try {
+	file.create (FileCreateFlags.PRIVATE |
+		     FileCreateFlags.REPLACE_DESTINATION);
+      } catch (Error e) {
+	printerr ("Error %s\nProxies data file could not be created\n", e.message);
+      }
 
       /* data_dir/gproxies */
       dirpath = Path.build_filename (Environment.get_user_data_dir (),
