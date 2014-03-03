@@ -59,6 +59,23 @@ namespace GProxies {
       }
     }
 
+    public ProxyData proxy_data {
+      get {
+        return { host_entry.text,
+            port_entry.get_value_as_int (),
+            user_entry.text,
+            password_entry.text };
+      }
+      set {
+        host_entry.text = value.host;
+        port_entry.value = value.port;
+        user_entry.text = value.user;
+        password_entry.text = value.password;
+
+        update_row_data ();
+      }
+    }
+
     public Row () {
       details_button.bind_property ("active",
                                     details_revealer, "reveal-child",
@@ -81,6 +98,17 @@ namespace GProxies {
       host_entry.changed.connect (update_save);
     }
 
+    private void update_row_data () {
+      label_name.set_text ("%s:%d".printf (host_entry.text,
+                                           port_entry.get_value_as_int ()));
+      /* update uid */
+      var data = "%s $ %s $ %d $ %s".printf (host_entry.text,
+                                             user_entry.text,
+                                             port_entry.get_value_as_int (),
+                                             password_entry.text);
+      uid = Checksum.compute_for_string (ChecksumType.MD5, data);
+    }
+
     private void update_save () {
       save_button.sensitive =  (host_entry.text != "" &&
 				port_entry.value != 0.0);
@@ -89,14 +117,7 @@ namespace GProxies {
     [GtkCallback]
     public void save_row_details () {
       details_revealer.set_reveal_child (false);
-      label_name.set_text ("%s:%d".printf (host_entry.text,
-					   port_entry.get_value_as_int ()));
-      /* update uid */
-      var data = "%s $ %s $ %d $ %s".printf (host_entry.text,
-					     user_entry.text,
-					     port_entry.get_value_as_int (),
-					     password_entry.text);
-      uid = Checksum.compute_for_string (ChecksumType.MD5, data);
+      update_row_data ();
 
       modified (false);
 
@@ -112,22 +133,6 @@ namespace GProxies {
 
     public void set_active (bool active) {
       selection_radio.set_active (active);
-    }
-
-    public void set_proxy_data (string host, uint port, string user, string pass) {
-      host_entry.text = host;
-      port_entry.value = port;
-      user_entry.text = user;
-      password_entry.text = pass;
-
-      label_name.set_text ("%s:%d".printf (host_entry.text,
-					   port_entry.get_value_as_int ()));
-      /* update uid */
-      var data = "%s $ %s $ %d $ %s".printf (host_entry.text,
-					     user_entry.text,
-					     port_entry.get_value_as_int (),
-					     password_entry.text);
-      uid = Checksum.compute_for_string (ChecksumType.MD5, data);
     }
 
     public signal void modified (bool removed);

@@ -18,6 +18,13 @@
  */
 
 namespace GProxies {
+  public struct ProxyData {
+    public string host;
+    public uint port;
+    public string user;
+    public string password;
+  }
+
   namespace Utils {
 
     public Gtk.Builder load_ui (string ui) {
