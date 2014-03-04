@@ -20,6 +20,12 @@
 using Gtk;
 
 namespace GProxies {
+  public struct Plugin {
+    public string name;
+    public string description;
+    public string exec_line;
+  }
+
   [GtkTemplate (ui = "/org/gnome/gproxies/ui/window.ui")]
   public class Window : Gtk.ApplicationWindow {
     private const GLib.ActionEntry[] action_entries = {
@@ -29,6 +35,7 @@ namespace GProxies {
 
     private GLib.Settings settings;
     private static string proxies_filename;
+    private static string plugins_dirpath;
 
     /* active configuration */
     private weak Row active_row;
@@ -63,6 +70,9 @@ namespace GProxies {
           settings.set_boolean ("did-setup", true);
         }
       }
+
+      plugins_dirpath = Path.build_filename (Environment.get_user_data_dir (),
+                                             "gproxies");
 
       /* open file, process it */
       proxies_filename = Path.build_filename (Environment.get_user_config_dir (),
@@ -174,7 +184,46 @@ namespace GProxies {
       exec_plugins (active_row.proxy_data);
     }
 
+    private List<Plugin?> get_plugins () {
+      var r = new List<Plugin?> ();
+
+      try {
+        var dir = File.new_for_path (plugins_dirpath);
+        var enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+
+        FileInfo file_info;
+        while ((file_info = enumerator.next_file ()) != null) {
+          if (file_info.get_file_type () != FileType.DIRECTORY)
+            continue;
+
+          var ini = new KeyFile ();
+          var ini_path = Path.build_filename (plugins_dirpath,
+                                              file_info.get_name (),
+                                              "plugin.ini"); /* this name is mandatory */
+          if (!ini.load_from_file (ini_path, 0)) {
+            printerr ("Plugin: %s could not be loaded\n", file_info.get_name ());
+            continue;
+          }
+
+          if (!ini.has_key ("Plugin", "name") ||
+              !ini.has_key ("Plugin", "exec")) {
+            continue;
+          }
+
+          Plugin p = { ini.get_string ("Plugin", "name"),
+                       ini.get_string ("Plugin", "description"),
+                       ini.get_string ("Plugin", "exec") };
+          r.append (p);
+        }
+      } catch (Error e) {
+        printerr ("Error %s\nPlugins could not be loaded\n", e.message);
+      }
+
+      return r;
+    }
+
     public void exec_default_plugin (ProxyData pdata) {
+      /* set GNOME proxy settings */
       var proxy_settings = new GLib.Settings ("org.gnome.system.proxy");
       proxy_settings.set_enum ("mode", 1);
 
@@ -197,6 +246,37 @@ namespace GProxies {
       print ("setting proxy to :%s:%s@%s:%u\n",
              pdata.user, pdata.password,
              pdata.host, pdata.port);
+      var errors_plugins = new List<string> ();
+      var all_plugins = get_plugins ();
+      foreach (var plugin in all_plugins) {
+        if (0 != exec_plugin (plugin, pdata))
+          errors_plugins.append (plugin.name);
+      }
+      /* FIXME: replace it for proper notification */
+      print ("%u plugins executed correctly\n",
+             all_plugins.length () - errors_plugins.length ());
+    }
+
+    public int exec_plugin (Plugin plugin, ProxyData pdata) {
+      string[] argv = { Path.build_filename (plugins_dirpath,
+                                             plugin.name,
+                                             plugin.exec_line),
+                        pdata.host,
+                        "%u".printf (pdata.port),
+                        pdata.user,
+                        pdata.password };
+      int exit_status;
+      try {
+        Process.spawn_sync (null, argv, null,
+                            SpawnFlags.STDOUT_TO_DEV_NULL |
+                            SpawnFlags.STDERR_TO_DEV_NULL,
+                            null, null, null, out exit_status);
+      } catch (SpawnError e) {
+        printerr ("Error %s.\nPlugin %s could not be executed\n",
+                  e.message,
+                  plugin.name);
+      }
+      return exit_status;
     }
   }
 
