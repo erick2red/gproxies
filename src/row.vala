@@ -37,6 +37,7 @@ namespace GProxies {
 
     [GtkChild]
     public RadioButton selection_radio;
+    private ulong toggled_handler;
 
     /* data entries */
     [GtkChild]
@@ -94,6 +95,11 @@ namespace GProxies {
                                      BindingFlags.INVERT_BOOLEAN |
                                      BindingFlags.BIDIRECTIONAL);
 
+      toggled_handler = selection_radio.toggled.connect (() => {
+          if (selection_radio.active)
+            activate ();
+        });
+
       port_entry.set_value (3128);
       host_entry.changed.connect (update_save);
     }
@@ -132,7 +138,9 @@ namespace GProxies {
     }
 
     public void set_active (bool active) {
+      SignalHandler.block (selection_radio, toggled_handler);
       selection_radio.set_active (active);
+      SignalHandler.unblock (selection_radio, toggled_handler);
     }
 
     public signal void modified (bool removed);
