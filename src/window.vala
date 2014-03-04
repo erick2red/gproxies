@@ -39,7 +39,31 @@ namespace GProxies {
 
     /* active configuration */
     private weak Row active_row;
+    private bool _running = false;
+    private bool running_plugins {
+      get {
+        return _running;
+      }
+      set {
+        proxies_list.sensitive = !value;
+        _running = value;
 
+        if (value) {
+          var box = new Box (Orientation.HORIZONTAL, 12);
+          box.add (new Label (_("Proxies: Executing plugins")));
+          var spinner = new Spinner ();
+          spinner.active = true;
+          box.add (spinner);
+          header_bar.set_custom_title (box);
+          box.show_all ();
+        } else {
+          header_bar.custom_title = null;
+        }
+      }
+    }
+
+    [GtkChild]
+    private HeaderBar header_bar;
     [GtkChild]
     private MenuButton settings_button;
     [GtkChild]
@@ -181,11 +205,17 @@ namespace GProxies {
       active_row = source_row as Row;
       settings.set_string ("active-proxy", active_row.uid);
 
-      exec_plugins.begin (active_row.proxy_data, (obj, res) => {
-          uint correct = exec_plugins.end (res);
-          /* FIXME: replace it for proper notification */
-          print ("%u plugins executed correctly\n", correct);
-        });
+      if (! running_plugins) {
+        running_plugins = true;
+        exec_plugins.begin (active_row.proxy_data, (obj, res) => {
+            uint correct = exec_plugins.end (res);
+            /* FIXME: replace it for proper notification */
+            print ("%u plugins executed correctly\n", correct);
+            running_plugins = false;
+          });
+      } else {
+        print ("Not executed because I'm running plugin code\n");
+      }
     }
 
     private List<Plugin?> get_plugins () {
