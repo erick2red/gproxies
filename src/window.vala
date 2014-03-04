@@ -173,8 +173,32 @@ namespace GProxies {
       active_row = source_row as Row;
       settings.set_string ("active-proxy", active_row.uid);
 
+      exec_plugins (active_row.proxy_data);
+    }
+
+    public void exec_default_plugin (ProxyData pdata) {
+      var proxy_settings = new GLib.Settings ("org.gnome.system.proxy");
+      proxy_settings.set_enum ("mode", 1);
+
+      var http_settings = proxy_settings.get_child ("http");
+      var https_settings = proxy_settings.get_child ("https");
+      var host = pdata.host;
+      if (pdata.user != "")
+        host = "%s:%s@%s".printf (pdata.user, pdata.password, pdata.host);
+      http_settings.set_string ("host", host);
+      http_settings.set_int ("port", (int) pdata.port);
+      https_settings.set_string ("host", host);
+      https_settings.set_int ("port", (int) pdata.port);
+    }
+
+    public void exec_plugins (ProxyData pdata) {
+      if (settings.get_boolean ("use-default"))
+        exec_default_plugin (pdata);
+
       /* FIXME: fill in with proper execute-plugins code */
-      print ("Called activated row: %s\n", active_row.uid);
+      print ("setting proxy to :%s:%s@%s:%u\n",
+             pdata.user, pdata.password,
+             pdata.host, pdata.port);
     }
   }
 
