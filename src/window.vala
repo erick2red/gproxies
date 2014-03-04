@@ -302,9 +302,12 @@ namespace GProxies {
                                              plugin.name,
                                              plugin.exec_line),
                         pdata.host,
-                        "%u".printf (pdata.port),
-                        pdata.user,
-                        pdata.password };
+                        "%u".printf (pdata.port) };
+      if (pdata.user != "") {
+        argv += pdata.user;
+        argv += pdata.password;
+      }
+
       int exit_status;
       try {
         Process.spawn_sync (null, argv, null,
