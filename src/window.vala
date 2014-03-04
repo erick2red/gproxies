@@ -140,7 +140,6 @@ namespace GProxies {
       var type = new VariantType ("a(ssuss)");
       var builder = new VariantBuilder (type);
 
-      print ("Saving children\n");
       foreach (var child in proxies_list.get_children ()) {
         if (!(child is Row))
           continue;
@@ -149,7 +148,6 @@ namespace GProxies {
           continue;
 
         Row row = child as Row;
-        print ("row_name of childrens is: %s\n", row.uid);
 
         builder.add ("(ssuss)",
                      row.uid,
