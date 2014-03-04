@@ -181,7 +181,11 @@ namespace GProxies {
       active_row = source_row as Row;
       settings.set_string ("active-proxy", active_row.uid);
 
-      exec_plugins (active_row.proxy_data);
+      exec_plugins.begin (active_row.proxy_data, (obj, res) => {
+          uint correct = exec_plugins.end (res);
+          /* FIXME: replace it for proper notification */
+          print ("%u plugins executed correctly\n", correct);
+        });
     }
 
     private List<Plugin?> get_plugins () {
@@ -238,23 +242,29 @@ namespace GProxies {
       https_settings.set_int ("port", (int) pdata.port);
     }
 
-    public void exec_plugins (ProxyData pdata) {
-      if (settings.get_boolean ("use-default"))
-        exec_default_plugin (pdata);
+    public async uint exec_plugins (ProxyData pdata) {
+      SourceFunc callback = exec_plugins.callback;
+      uint correct = 0;
 
-      /* FIXME: fill in with proper execute-plugins code */
-      print ("setting proxy to :%s:%s@%s:%u\n",
-             pdata.user, pdata.password,
-             pdata.host, pdata.port);
-      var errors_plugins = new List<string> ();
-      var all_plugins = get_plugins ();
-      foreach (var plugin in all_plugins) {
-        if (0 != exec_plugin (plugin, pdata))
-          errors_plugins.append (plugin.name);
-      }
-      /* FIXME: replace it for proper notification */
-      print ("%u plugins executed correctly\n",
-             all_plugins.length () - errors_plugins.length ());
+      ThreadFunc<void*> run = () => {
+        if (settings.get_boolean ("use-default"))
+          exec_default_plugin (pdata);
+
+        var errors_plugins = new List<string> ();
+        var all_plugins = get_plugins ();
+        foreach (var plugin in all_plugins) {
+          if (0 != exec_plugin (plugin, pdata))
+            errors_plugins.append (plugin.name);
+        }
+
+        correct = all_plugins.length () - errors_plugins.length ();
+        Idle.add((owned) callback);
+        return null;
+      };
+      new Thread<void*> (null, run);
+
+      yield;
+      return correct;
     }
 
     public int exec_plugin (Plugin plugin, ProxyData pdata) {
