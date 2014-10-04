@@ -105,8 +105,18 @@ namespace GProxies {
     }
 
     private void update_row_data () {
-      label_name.set_text ("%s:%d".printf (host_entry.text,
-                                           port_entry.get_value_as_int ()));
+      if (user_entry.text_length != 0) {
+        label_name.set_markup (
+          Markup.printf_escaped ("%s:%d <span color='#bbbeb7'>as %s</span>",
+                                 host_entry.text,
+                                 port_entry.get_value_as_int (),
+                                 user_entry.text));
+      } else {
+        label_name.set_text (
+          "%s:%d".printf (host_entry.text,
+                                port_entry.get_value_as_int ()));
+      }
+
       /* update uid */
       var data = "%s $ %s $ %d $ %s".printf (host_entry.text,
                                              user_entry.text,
